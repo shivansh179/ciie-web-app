@@ -13,13 +13,21 @@ const handleFirebaseLogin = (email, password) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        toast.success("Logged in successfully!");
-        window.location.replace("./");
+         
+        if(email === "admin-ahmed@gmail.com"){
+          window.location.replace("/admin");
+
+        }else{
+          
+          toast.success("Logged in successfully!");
+          window.location.replace("./");
+        }
+
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        toast.error('Check your credentials!', {
+        toast.error('Either Your credentials are invalid or You are not a member of Ciie  ', {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -31,9 +39,14 @@ const handleFirebaseLogin = (email, password) => {
           transition: Slide,
         });
       });
+      
+      
+      
+      
   } catch (error) {
     toast.error("Error logging in!");
   }
+  
 };
 
 const LoginPage = () => {
@@ -43,13 +56,14 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <ToastContainer />
+    
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-yellow-400 shadow-lg transform -skew-y-15 sm:skew-y-0 sm:-rotate-15 sm:rounded-3xl"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-teal-400 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <div>
-              <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              <h1 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
               {/* <Image
                     src="/ciie_logo.png "
                     width={200}
@@ -57,8 +71,8 @@ const LoginPage = () => {
                     alt="Picture of the author"
               /> */}
 
-              <h1>CIIE</h1>
-              </h2>
+              CIIE
+              </h1>
             </div>
             <form className="divide-y divide-gray-200">
               <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">

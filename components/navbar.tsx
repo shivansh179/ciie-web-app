@@ -9,6 +9,9 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu
 } from "@nextui-org/react";
 import { link as linkStyles } from "@nextui-org/theme";
 import { siteConfig } from "@/config/site";
@@ -17,7 +20,6 @@ import clsx from "clsx";
 import { Modal } from "@nextui-org/react";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { SearchIcon } from "@/components/icons";
-import CIIELogo from "@/public/ciie_logo.png";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
@@ -27,6 +29,19 @@ import { Menu } from "@headlessui/react";
 export const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [user, setUser] = useState(null);
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUsername(user.displayName || user.email); // Use displayName or email as fallback
+      } else {
+        setUsername('');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -118,14 +133,30 @@ export const Navbar = () => {
             <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
               <Menu.Item>
                 {({ active }) => (
-                  <button
-                    onClick={handleLogout}
-                    className={`${
-                      active ? "bg-gray-100" : ""
-                    } w-full text-left px-4 py-2 text-sm text-gray-700`}
-                  >
-                    Logout
-                  </button>
+                  <Dropdown>
+                    <DropdownMenu aria-label="Profile Actions" variant="flat">
+                      <DropdownItem key="profile" className="h-14 gap-2">
+                        <p className="font-semibold">Signed in as</p>
+                        <p className="font-semibold">{username}</p>
+                      </DropdownItem>
+                      <DropdownItem key="settings">My Settings</DropdownItem>
+                      <DropdownItem key="team_settings">Team Settings</DropdownItem>
+                      <DropdownItem key="analytics">Analytics</DropdownItem>
+                      <DropdownItem key="system">System</DropdownItem>
+                      <DropdownItem key="configurations">Configurations</DropdownItem>
+                      <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+                      <DropdownItem key="logout" color="danger">
+                        <button
+                          onClick={handleLogout}
+                          className={`${
+                            active ? "bg-gray-100" : ""
+                          } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                        >
+                          Logout
+                        </button>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
                 )}
               </Menu.Item>
             </Menu.Items>

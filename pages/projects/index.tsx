@@ -222,7 +222,7 @@ export default function DocsPage() {
               required
             />
             <Input
-              label="File Upload"
+              label="File"
               type="file"
               onChange={handleFileChange}
               required
