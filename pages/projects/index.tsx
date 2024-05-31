@@ -1,37 +1,27 @@
 // pages/docs.js
 import { useEffect, useState } from "react";
 import {
-  Breadcrumbs,
-  BreadcrumbItem,
-  Image,
   Button,
   Input,
-  Spacer,
-  Card, 
-  CardHeader, 
-  CardBody,
-  CardFooter, 
-  Divider, 
-  Link,
- } from "@nextui-org/react";
-
- 
-
+  Textarea,
+} from "@nextui-org/react";
 import { useRouter } from "next/router";
 import DefaultLayout from "@/layouts/default";
 import BackdropAnimation from "@/components/utils/backdrop_animation";
-import { auth, db } from "@/firebaseconfig";
+import { auth, db, storage } from "@/firebaseconfig";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function DocsPage() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true); // Initially loading
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [year, setYear] = useState("");
   const [regNo, setRegNo] = useState("");
-  const [file, setFile] = useState(null);
-  const [fileUrl, setFileUrl] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [project, setProject] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
@@ -39,8 +29,8 @@ export default function DocsPage() {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
-        setName(user.displayName);
-        setEmail(user.email);
+        setName(user.displayName || "");
+        setEmail(user.email || "");
       } else {
         setUser(null);
       }
@@ -50,41 +40,62 @@ export default function DocsPage() {
     return () => unsubscribe();
   }, []);
 
-  const signinWithGoogle = (e) => {
-    window.location.replace("./login");
-
-  }
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setFile(file);
-    var binaryData = [];
-    binaryData.push(file); 
-    setFileUrl(window.URL.createObjectURL(new Blob(binaryData, {type: "application/zip"})));
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validate minimum word count for project description
+    const wordCount = project.trim().split(/\s+/).length;
+    if (wordCount < 100) {
+      toast.error("Please provide a minimum of 100 words for the project description.");
+      return;
+    }
+
     try {
-      if (!name || !email || !year || !regNo || !file) {
-        setErrorMessage("Please fill in all fields and select a file.");
+      if (name === "" || email === "" || year === "" || regNo === "" || project === "" || !file) {
+        toast.error("Please fill in all fields and select a file.");
         return;
       }
 
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("year", year);
-      formData.append("regNo", regNo);
-      formData.append("file", file);
+    //   {name === "" && (
+    //     <p className="text-red-500">Name is required</p>
+    //   )}
+    // {email === "" && (
+    //   <p className="text-red-500">Email is required</p>
+    // )}
+    // {year === "" && (
+    //   <p className="text-red-500">Year is required</p>
+    // )}
+    // {regNo === "" && (
+    //   <p className="text-red-500">Registration Number is required</p>
+    // )}
+    // {project === "" && (
+    //   <p className="text-red-500">Project description is required</p>
+    // )}
+    // {!file && (
+    //   <p className="text-red-500">File is required</p>
+    // )}
+    
 
-      // Example of storing data in Firestore
-      const docRef = doc(db, "submissions", regNo);
+      // Upload file to Firebase Storage
+      const storageRef = ref(storage, `files/${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+
+      // Save data to Firestore
+      const docRef = doc(db, "submissions", name);
       await setDoc(docRef, {
         name,
         email,
         year,
         regNo,
+        fileUrl: url,
+        project,
         uploadedAt: Timestamp.now(),
       });
 
@@ -94,13 +105,13 @@ export default function DocsPage() {
       setYear("");
       setRegNo("");
       setFile(null);
-      setFileUrl(null);
+      setProject("");
       setErrorMessage("");
 
-      alert("Form submitted successfully!");
+      toast.success("Form submitted successfully");
     } catch (error) {
       console.error("Error submitting form:", error);
-      setErrorMessage("Failed to submit form. Please try again later.");
+      toast.error("Failed to submit form. Please try again later.");
     }
   };
 
@@ -110,39 +121,34 @@ export default function DocsPage() {
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 h-screen overflow-hidden">
           <div className="pb-52 mb-10 max-w-7xl text-center items-center justify-center place-content-center">
             <BackdropAnimation />
-            {/* <Image
-              src="/events.jpg"
-              alt="Events"
-              width={300}
-              height={300}
-              className="mx-auto"
-            /> */}
+            <Toaster position="bottom-center" />
             <Card className="max-w-[400px] mx-auto">
               <CardHeader className="flex gap-3 items-center">
                 <Image
                   alt="CIIE"
                   height={40}
                   radius="sm"
-                  src = "/ciie_logo.png"
+                  src="/ciie_logo.png"
                   width={40}
                 />
                 <div className="flex flex-col">
                   <p className="text-left">CIIE</p>
-                  <p className="text-small text-default-500">Incubation and Innovation Cell</p>
+                  <p className="text-small text-default-500">
+                    Incubation and Innovation Cell
+                  </p>
                 </div>
               </CardHeader>
               <Divider />
               <CardBody>
-                <p>If you are a ciie member and you are not Login that's why you can't see any projects.
+                <p>
+                  If you are a CIIE member and you are not logged in, you cant see any projects.
                   <br />
-                  Please Login first.
+                  Please login first.
                 </p>
               </CardBody>
               <Divider />
               <CardFooter>
-                <Link href="./login">
-                  Login
-                </Link>
+                <Link href="./login">Login</Link>
               </CardFooter>
             </Card>
           </div>
@@ -157,40 +163,6 @@ export default function DocsPage() {
         <div className="pb-10 max-w-7xl text-center items-center justify-center place-content-center">
           <BackdropAnimation />
 
-          <Image
-            src="/srm_logo.png"
-            width={100}
-            height={50}
-            alt=""
-            className="border-4 border-violet-300/50 md:hidden rounded-full mx-auto mb-3"
-          />
-
-          <Breadcrumbs className="md:hidden mr:auto">
-            <BreadcrumbItem onClick={() => router.replace("/")}>
-              CIIE Web App
-            </BreadcrumbItem>
-            <BreadcrumbItem color="primary" className="font-bold">
-              Events
-            </BreadcrumbItem>
-          </Breadcrumbs>
-
-          <div className="max-w-5xl w-fit mt-10 mx-auto">
-            <Image
-              src="/events.svg"
-              alt="CIIE Web App"
-              className="w-[300px] lg:w-[400px] mx-auto"
-            />
-          </div>
-
-          <h1 className="mt-3 text-2xl font-bold md:text-4xl">Events</h1>
-
-          <h1 className="text-sm mb-20 md:text-lg lg:text-xl">
-            CIIE regularly hosts events and hackathons, ensuring that everyone
-            has a fair chance to spotlight their skills and abilities in a
-            relaxed and inclusive environment.
-          </h1>
-
-
           <h1 className="text-5xl mb-5">Submit Your Report</h1>
           <form
             onSubmit={handleSubmit}
@@ -202,45 +174,63 @@ export default function DocsPage() {
               onChange={(e) => setName(e.target.value)}
               required
             />
+
             <Input
               label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               required
-            />
+              />
+
             <Input
               label="Year"
               value={year}
               onChange={(e) => setYear(e.target.value)}
               required
-            />
+              />
+
             <Input
               label="Registration Number"
               value={regNo}
               onChange={(e) => setRegNo(e.target.value)}
               required
-            />
-            <Input
-              label="File"
-              type="file"
-              onChange={handleFileChange}
+              />
+
+            <Textarea
+              label="About Your Project"
+              value={project}
+              onChange={(e) => setProject(e.target.value)}
+              className="h-32 overflow-y-hidden"
               required
-            />
-            {fileUrl && (
-              <div>
-                <Image src={fileUrl} alt="Uploaded File" width={100} height={100} />
-              </div>
+              />
+
+            <input
+              aria-label="file"
+              onChange={handleFileChange}
+              type="file"
+              accept=".png, .jpg,.jpeg,.pdf"
+              required
+              />
+            
+
+            {file && (
+              <p className="text-gray-600">Selected file: {file.name}</p>
             )}
-            {errorMessage && <Text color="error">{errorMessage}</Text>}
+
+            {errorMessage && (
+              <Textarea readOnly value={errorMessage} />
+            )}
+
             <Button
               color="primary"
               type="submit"
-              disabled={!name || !email || !year || !regNo || !file}
+              disabled={!name || !email || !year || !regNo || !file || !project}
             >
               Submit
             </Button>
           </form>
+          <Toaster position="bottom-center" />
         </div>
       </section>
     </DefaultLayout>

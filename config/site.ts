@@ -10,6 +10,11 @@ export const siteConfig = {
       href: "/",
     },
     {
+     
+      href: "/admin-home",
+    },
+    
+    {
       label: "Projects",
       href: "/projects",
     },
@@ -28,6 +33,10 @@ export const siteConfig = {
     {
  
       href: "/admin",
+    },
+    {
+ 
+      href: "/helpAndFeedback",
     },
   ],
 

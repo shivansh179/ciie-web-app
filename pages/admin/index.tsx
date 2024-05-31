@@ -4,8 +4,10 @@ import DefaultLayout from "@/layouts/default";
 import BackdropAnimation from "@/components/utils/backdrop_animation";
 import { auth } from '@/firebaseconfig';
 import Navbar from '../navbar1';
+import withAdminAuth from '@/components/withAdminAuth';;
 
-export default function IndexPage() {
+
+const AdminPage = () => {
   const [username, setUsername] = useState('');
 
  
@@ -33,3 +35,4 @@ export default function IndexPage() {
  </>
   );
 }
+export default withAdminAuth(AdminPage);

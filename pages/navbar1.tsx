@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { onAuthStateChanged } from "@firebase/auth";
 import { auth } from "@/firebaseconfig";
+import Image from "next/image";
 
 export default function App() {
       
@@ -28,29 +29,47 @@ export default function App() {
 
 
   return (
-    <Navbar>
-      <NavbarBrand>
+    <Navbar className="flex flex-row justify-evenly" >
+      <div className="flex flex-row items-center  gap-20">
+      <NavbarBrand className="flex flex-row gap-4 items-center ">
         {/* <AcmeLogo /> */}
-        <p className="font-bold text-inherit">ACME</p>
+        <Image
+          src={"/ciie_logo.png"}
+          height={40}
+          width={40}
+          alt="ciie_logo" 
+        />
+        <p className="font-bold text-inherit text-3xl">CIIE</p>
       </NavbarBrand>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden sm:flex gap-4 " justify="center">
         <NavbarItem>
           <Link color="foreground" href="#">
-            Features
+            Home
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="#" aria-current="page" color="secondary">
-            Customers
+          <Link href="/admin-home" aria-current="page" color="secondary">
+            Reports
           </Link>
         </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="#">
-            Integrations
+            Verge
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Events
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            About us
           </Link>
         </NavbarItem>
       </NavbarContent>
+      </div>
 
       <NavbarContent as="div" justify="end">
         <Dropdown placement="bottom-end">
@@ -75,7 +94,10 @@ export default function App() {
             <DropdownItem key="analytics">Analytics</DropdownItem>
             <DropdownItem key="system">System</DropdownItem>
             <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+            <DropdownItem key="help_and_feedback">  
+            <Link color="foreground" href="/helpAndFeedback">
+            Help & Feedback
+          </Link></DropdownItem>
             <DropdownItem key="logout" color="danger">
               Log Out
             </DropdownItem>
