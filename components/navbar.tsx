@@ -131,7 +131,7 @@ export const Navbar = () => {
                 alt=""
                 className="rounded-xl mb-3 ml-2 mr-2"
               />
-              <span>{user.displayName || 'User'}</span>
+              <span>{user.displayName}</span>
             </Menu.Button>
 
             <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
