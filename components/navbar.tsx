@@ -9,6 +9,9 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu
 } from "@nextui-org/react";
 import { link as linkStyles } from "@nextui-org/theme";
 import { siteConfig } from "@/config/site";
@@ -27,20 +30,26 @@ import adminData from './admins.json';
 export const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState<string>('');
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        setUsername(currentUser.displayName || currentUser.email || ''); // Use displayName or email as fallback
-        setIsAdmin(adminData.admins.includes(currentUser.email || ''));
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUsername(user.displayName || user.email || ''); // Use displayName, email or fallback to empty string
+        setIsAdmin(adminData.admins.includes(user.email || ''));
       } else {
-        setUser(null);
         setUsername('');
         setIsAdmin(false);
       }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
     });
 
     return () => unsubscribe();
@@ -112,7 +121,7 @@ export const Navbar = () => {
 
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
 
-        {user && (
+        {user ? (
           <Menu as="div" className="relative">
             <Menu.Button className="flex flex-row items-center content-center  bg-gray-300/20 rounded-xl ">
               <Image
@@ -122,113 +131,53 @@ export const Navbar = () => {
                 alt=""
                 className="rounded-xl mb-3 ml-2 mr-2"
               />
-              <span>{user.displayName}</span>
+              <span>{user.displayName || 'User'}</span>
             </Menu.Button>
 
             <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
               <Menu.Item>
                 {({ active }) => (
-                  <div className={`dropdown-item ${active ? 'bg-gray-100' : ''}`}>
-                    <p className="font-semibold">Signed in as</p>
-                    <p className="font-semibold">{username}</p>
-                  </div>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <Link
-                    color="foreground"
-                    href="/settings"
-                    className={`dropdown-item ${active ? 'bg-gray-100' : ''}`}
-                  >
-                    My Settings
-                  </Link>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <Link
-                    color="foreground"
-                    href="/team-settings"
-                    className={`dropdown-item ${active ? 'bg-gray-100' : ''}`}
-                  >
-                    Team Settings
-                  </Link>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <Link
-                    color="foreground"
-                    href="/analytics"
-                    className={`dropdown-item ${active ? 'bg-gray-100' : ''}`}
-                  >
-                    Analytics
-                  </Link>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <Link
-                    color="foreground"
-                    href="/system"
-                    className={`dropdown-item ${active ? 'bg-gray-100' : ''}`}
-                  >
-                    System
-                  </Link>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <Link
-                    color="foreground"
-                    href="/configurations"
-                    className={`dropdown-item ${active ? 'bg-gray-100' : ''}`}
-                  >
-                    Configurations
-                  </Link>
-                )}
-              </Menu.Item>
-              {isAdmin ? (
-                <Menu.Item>
-                  {({ active }) => (
-                    <Link
-                      color="foreground"
-                      href="/admin"
-                      className={`dropdown-item ${active ? 'bg-gray-100' : ''}`}
-                    >
-                      Admin Section
-                    </Link>
-                  )}
-                </Menu.Item>
-              ) : (
-                <Menu.Item>
-                  {({ active }) => (
-                    <Link
-                      color="foreground"
-                      href="/helpAndFeedback"
-                      className={`dropdown-item ${active ? 'bg-gray-100' : ''}`}
-                    >
-                      Help & Feedback
-                    </Link>
-                  )}
-                </Menu.Item>
-              )}
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    onClick={handleLogout}
-                    className={`w-full text-left px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
-                  >
-                    Logout
-                  </button>
+                  <Dropdown>
+                    <DropdownMenu aria-label="Profile Actions" variant="flat">
+                      <DropdownItem key="profile" className="h-14 gap-2">
+                        <p className="font-semibold">Signed in as</p>
+                        <p className="font-semibold">{username}</p>
+                      </DropdownItem>
+                      <DropdownItem key="settings">My Settings</DropdownItem>
+                      <DropdownItem key="team_settings">Team Settings</DropdownItem>
+                      <DropdownItem key="analytics">Analytics</DropdownItem>
+                      <DropdownItem key="system">System</DropdownItem>
+                      <DropdownItem key="configurations">Configurations</DropdownItem>
+                      {isAdmin ? (
+                        <DropdownItem key="admin_section">
+                          <Link color="foreground" href="/admin">
+                            Admin Section
+                          </Link>
+                        </DropdownItem>
+                      ) : (
+                        <DropdownItem key="help_and_feedback">
+                          <Link color="foreground" href="/helpAndFeedback">
+                            Help & Feedback
+                          </Link>
+                        </DropdownItem>
+                      )}
+                      <DropdownItem key="logout" color="danger">
+                        <button
+                          onClick={handleLogout}
+                          className={`${
+                            active ? "bg-gray-100" : ""
+                          } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                        >
+                          Logout
+                        </button>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
                 )}
               </Menu.Item>
             </Menu.Items>
           </Menu>
-        )}
-
-        {!user && (
+        ) : (
           <Button
             color="primary"
             onClick={() => {
