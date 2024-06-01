@@ -11,7 +11,7 @@ import {
 import { AllAboutLearningCard } from "@/components/widgets/homeScreenCards";
 import { TeamCardForHome } from "@/components/widgets/TeamCard";
 import { Strings } from "@/public/values/strings";
-import { auth } from '@/components/firebaseConfig';
+import { auth } from '@/firebaseconfig';
 
 export default function IndexPage() {
   const [username, setUsername] = useState('');

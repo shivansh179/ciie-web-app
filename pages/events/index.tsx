@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { title } from "@/components/primitives";
 import BackdropAnimation from "@/components/utils/backdrop_animation";
 import DefaultLayout from "@/layouts/default";

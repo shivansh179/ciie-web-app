@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import DefaultLayout from "@/layouts/default";
 import BackdropAnimation from "@/components/utils/backdrop_animation";
-import { auth } from '@/components/firebaseConfig';
+import { auth } from '@/firebaseconfig';
 import Navbar from '../navbar1';
 import withAdminAuth from '@/components/withAdminAuth';;
 

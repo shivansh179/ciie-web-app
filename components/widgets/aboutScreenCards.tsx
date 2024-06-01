@@ -56,12 +56,12 @@ function SpeechCard(props: professorProp) {
 function VisionCard(props: visionProp) {
   return props.fixedflex ? (
     <div className=" border-2 border-gray-400/20 bg-gray-300/20 flex flex-col rounded-2xl backdrop-blur-sm p-5">
-      <Image src={props.image} />
+      <Image src={props.image} alt="img"/>
       <h1 className=" mt-5 text-md">{props.visionText}</h1>
     </div>
   ) : (
     <div className=" flex flex-col sm:flex-row md:gap-x-10 rounded-2xl max-w-3xl md:mx-auto backdrop-blur-sm py-2 px-3">
-      <Image className=" max-h-[300]" src={props.image} loading="lazy" />
+      <Image className=" max-h-[300]" src={props.image} loading="lazy" alt="img"/>
       <h1 className=" mt-5 md:text-xl text-lg">{props.visionText}</h1>
     </div>
   );
@@ -74,6 +74,7 @@ function TeamMemberCard(props: teamMember) {
           className=" max-w-[150px] md:max-w-[100px] md:max-h-[200px] ml-auto rounded-3xl"
           src={props.image}
           loading="lazy"
+          alt="img"
         />
       </div>
 
@@ -84,12 +85,12 @@ function TeamMemberCard(props: teamMember) {
 
         <div className="flex mt-3 ml-auto">
           {props.github && (
-            <a href={props.github} target="_blank" rel="noopener noreferrer">
+            <a href={props.github} target="_blank" rel="noopener noreferrer" title="image">
               <Image src="/icons/github.svg" alt="GitHub" className="w-6 h-6 hover:scale-125 transition-all duration-300 ease-in-out bg-white/60" />
             </a>
           )}
           {props.linkedin && (
-            <a href={props.linkedin} target="_blank" rel="noopener noreferrer">
+            <a href={props.linkedin} target="_blank" rel="noopener noreferrer" title="image">
               <Image
                 src="/icons/linkedin.png"
                 alt="LinkedIn"
