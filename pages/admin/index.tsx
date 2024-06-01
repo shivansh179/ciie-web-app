@@ -31,7 +31,7 @@ const AdminPage = () => {
 
      
         
-        <h1 className='flex items-center justify-center'>This is admin page</h1>
+        <h1 className='flex items-center justify-center mt-44 text-4xl'>This is admin page</h1>
  </>
   );
 }

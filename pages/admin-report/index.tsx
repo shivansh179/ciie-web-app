@@ -1,19 +1,34 @@
-// pages/dataTable.js
 import { useEffect, useState } from 'react';
 import { db } from '@/firebaseconfig';
 import { collection, getDocs } from 'firebase/firestore';
 import withAdminAuth from '@/components/withAdminAuth';
 import Modal from '@/components/Model';
+import { Button } from '@nextui-org/react';
+import { IoMdExit } from "react-icons/io";
+import Link from 'next/link';
+
+interface Submission {
+  email: string;
+  name: string;
+  regNo: string;
+  uploadedAt: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  year: string;
+  fileUrl?: string;
+  project?: string;
+}
 
 const AdminPage = () => {
-  const [data, setData] = useState([]);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [data, setData] = useState<Submission[]>([]);
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'submissions'));
-        const dataList = querySnapshot.docs.map(doc => doc.data());
+        const dataList = querySnapshot.docs.map(doc => doc.data() as Submission);
         setData(dataList);
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -23,8 +38,8 @@ const AdminPage = () => {
     fetchData();
   }, []);
 
-  const handleProjectClick = (project) => {
-    setSelectedProject(project);
+  const handleProjectClick = (project: string | undefined) => {
+    setSelectedProject(project || null);
   };
 
   const closeModal = () => {
@@ -33,6 +48,11 @@ const AdminPage = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <Link href="/admin">
+        <Button color="danger" variant="bordered" startContent={<IoMdExit className="transform rotate-180 size-7" />} className='mb-8'>
+          Admin Page
+        </Button>
+      </Link>
       <h1 className="text-2xl font-bold mb-4">Data Table</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-black border border-gray-300">
@@ -70,7 +90,7 @@ const AdminPage = () => {
                       className="text-blue-500 hover:underline cursor-pointer"
                       onClick={() => handleProjectClick(item.project)}
                     >
-                      {item.project.split(' ')[0]+"..."}
+                      {item.project.split(' ')[0] + "..."}
                     </span>
                   ) : (
                     'No description'

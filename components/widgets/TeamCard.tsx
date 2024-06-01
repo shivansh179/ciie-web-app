@@ -1,6 +1,6 @@
 "use client"
 import { Console } from 'console'
-import Image from 'next/image'
+import Image from 'next/image' 
 import React from 'react'
 import { redirect } from 'next/navigation'
 import { useRouter } from 'next/router';

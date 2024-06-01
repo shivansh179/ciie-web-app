@@ -1,17 +1,22 @@
-import React from "react";
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar} from "@nextui-org/react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { onAuthStateChanged } from "@firebase/auth";
-import { auth } from "@/firebaseconfig";
+import React, { useState, useEffect } from "react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Link,
+  DropdownItem,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  Avatar
+} from "@nextui-org/react";
 import Image from "next/image";
+import { onAuthStateChanged, signOut } from "@firebase/auth";
+import { auth } from "@/firebaseconfig";
 
 export default function App() {
-      
   const [username, setUsername] = useState('');
-
- 
-  
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -25,63 +30,68 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-
-
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
-    <Navbar className="flex flex-row justify-evenly" >
-      <div className="flex flex-row items-center  gap-20">
-      <NavbarBrand className="flex flex-row gap-4 items-center ">
-        {/* <AcmeLogo /> */}
-        <Image
-          src={"/ciie_logo.png"}
-          height={40}
-          width={40}
-          alt="ciie_logo" 
-        />
-        <p className="font-bold text-inherit text-3xl">CIIE</p>
-      </NavbarBrand>
+    <Navbar className="flex flex-row w-full  justify-around ">
 
-      <NavbarContent className="hidden sm:flex gap-4 " justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="/admin-home" aria-current="page" color="secondary">
-            Reports
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Verge
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Events
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            About us
-          </Link>
-        </NavbarItem>
-      </NavbarContent>
+
+      <div className="flex flex-row items-center gap-20">
+        <NavbarBrand className="flex flex-row gap-4 items-center">
+          <Image
+            src={"/ciie_logo.png"}
+            height={40}
+            width={40}
+            alt="ciie_logo"
+          />
+          <p className="font-bold text-inherit text-3xl">CIIE</p>
+        </NavbarBrand>
+
+        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+          <NavbarItem>
+            <Link color="foreground" href="#">
+              Home
+            </Link>
+          </NavbarItem>
+          <NavbarItem isActive>
+            <Link href="/admin-report" aria-current="page" color="secondary">
+              Reports
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link color="foreground" href="/internalFaculty">
+              Internal Faculty
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link color="foreground" href="#">
+              Trainings
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link color="foreground" href="#">
+              About us
+            </Link>
+          </NavbarItem>
+        </NavbarContent>
       </div>
+
+
+
+
 
       <NavbarContent as="div" justify="end">
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              color="secondary"
-              name="Jason Hughes"
-              size="sm"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+            <Avatar 
+              name={username.charAt(0).toUpperCase()} 
+              className="bg-green-700 text-2xl cursor-pointer"
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -94,11 +104,12 @@ export default function App() {
             <DropdownItem key="analytics">Analytics</DropdownItem>
             <DropdownItem key="system">System</DropdownItem>
             <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">  
-            <Link color="foreground" href="/helpAndFeedback">
-            Help & Feedback
-          </Link></DropdownItem>
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="help_and_feedback">
+              <Link color="foreground" href="/helpAndFeedback">
+                Help & Feedback
+              </Link>
+            </DropdownItem>
+            <DropdownItem key="logout" color="danger" onClick={handleLogout}>
               Log Out
             </DropdownItem>
           </DropdownMenu>

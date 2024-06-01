@@ -4,6 +4,12 @@ import {
   Button,
   Input,
   Textarea,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+  Link,
 } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import DefaultLayout from "@/layouts/default";
@@ -12,9 +18,12 @@ import { auth, db, storage } from "@/firebaseconfig";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Toaster, toast } from 'react-hot-toast';
+import Image from "next/image";
+import { ChangeEvent } from "react";
+import { User } from 'firebase/auth';
 
 export default function DocsPage() {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true); // Initially loading
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -40,7 +49,7 @@ export default function DocsPage() {
     return () => unsubscribe();
   }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
     }
@@ -61,26 +70,6 @@ export default function DocsPage() {
         toast.error("Please fill in all fields and select a file.");
         return;
       }
-
-    //   {name === "" && (
-    //     <p className="text-red-500">Name is required</p>
-    //   )}
-    // {email === "" && (
-    //   <p className="text-red-500">Email is required</p>
-    // )}
-    // {year === "" && (
-    //   <p className="text-red-500">Year is required</p>
-    // )}
-    // {regNo === "" && (
-    //   <p className="text-red-500">Registration Number is required</p>
-    // )}
-    // {project === "" && (
-    //   <p className="text-red-500">Project description is required</p>
-    // )}
-    // {!file && (
-    //   <p className="text-red-500">File is required</p>
-    // )}
-    
 
       // Upload file to Firebase Storage
       const storageRef = ref(storage, `files/${file.name}`);
@@ -127,9 +116,9 @@ export default function DocsPage() {
                 <Image
                   alt="CIIE"
                   height={40}
-                  radius="sm"
-                  src="/ciie_logo.png"
                   width={40}
+                  src="/ciie_logo.png"
+                  className="rounded-sm"
                 />
                 <div className="flex flex-col">
                   <p className="text-left">CIIE</p>
@@ -181,21 +170,21 @@ export default function DocsPage() {
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               required
-              />
+            />
 
             <Input
               label="Year"
               value={year}
               onChange={(e) => setYear(e.target.value)}
               required
-              />
+            />
 
             <Input
               label="Registration Number"
               value={regNo}
               onChange={(e) => setRegNo(e.target.value)}
               required
-              />
+            />
 
             <Textarea
               label="About Your Project"
@@ -203,7 +192,7 @@ export default function DocsPage() {
               onChange={(e) => setProject(e.target.value)}
               className="h-32 overflow-y-hidden"
               required
-              />
+            />
 
             <input
               aria-label="file"
@@ -211,8 +200,7 @@ export default function DocsPage() {
               type="file"
               accept=".png, .jpg,.jpeg,.pdf"
               required
-              />
-            
+            />
 
             {file && (
               <p className="text-gray-600">Selected file: {file.name}</p>

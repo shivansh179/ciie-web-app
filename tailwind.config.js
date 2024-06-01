@@ -10,6 +10,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      spacing: {
+        '128': '32rem',  // 512px
+        '144': '36rem',  // 576px
+        '160': '40rem',  // 640px
+        '184': '44rem',  // 640px
+        '192': '48rem',  // 768px
+        '256': '64rem',  // 1024px
+        '320': '80rem',  // 1280px
+        '384': '96rem',  // 1536px
+      },
       keyframes: {
         modalOpen: {
           '0%': { transform: 'scale(0.5)', opacity: '0' },

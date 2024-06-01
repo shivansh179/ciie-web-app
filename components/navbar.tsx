@@ -22,30 +22,30 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { SearchIcon } from "@/components/icons";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
 import { auth } from "../firebaseconfig"; // Ensure this import is correct
 import { Menu } from "@headlessui/react";
+import adminData from './admins.json'
+ 
 
 export const Navbar = () => {
+  
   const [visible, setVisible] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [username, setUsername] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        setUser(user);
         setUsername(user.displayName || user.email); // Use displayName or email as fallback
+        setIsAdmin(adminData.admins.includes(user.email));
       } else {
+        setUser(null);
         setUsername('');
+        setIsAdmin(false);
       }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
     });
 
     return () => unsubscribe();
@@ -71,7 +71,8 @@ export const Navbar = () => {
       type="search"
     />
   );
-
+  
+  
   return (
     <NextUINavbar maxWidth="xl" position="sticky" className="">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -133,7 +134,7 @@ export const Navbar = () => {
             <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
               <Menu.Item>
                 {({ active }) => (
-                  <Dropdown>
+                  <Dropdown >
                     <DropdownMenu aria-label="Profile Actions" variant="flat">
                       <DropdownItem key="profile" className="h-14 gap-2">
                         <p className="font-semibold">Signed in as</p>
@@ -144,11 +145,19 @@ export const Navbar = () => {
                       <DropdownItem key="analytics">Analytics</DropdownItem>
                       <DropdownItem key="system">System</DropdownItem>
                       <DropdownItem key="configurations">Configurations</DropdownItem>
-                      <DropdownItem key="help_and_feedback">  
-                        <Link color="foreground" href="/helpAndFeedback">
+                      {isAdmin ? (
+                        <DropdownItem key="admin_section">
+                          <Link color="foreground" href="/admin">
+                            Admin Section
+                          </Link>
+                        </DropdownItem>
+                      ) : (
+                        <DropdownItem key="help_and_feedback">
+                          <Link color="foreground" href="/helpAndFeedback">
                             Help & Feedback
-                        </Link>
-                      </DropdownItem>
+                          </Link>
+                        </DropdownItem>
+                      )}
                       <DropdownItem key="logout" color="danger">
                         <button
                           onClick={handleLogout}

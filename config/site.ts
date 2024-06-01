@@ -11,7 +11,7 @@ export const siteConfig = {
     },
     {
      
-      href: "/admin-home",
+      href: "/admin-report",
     },
     
     {
@@ -37,6 +37,10 @@ export const siteConfig = {
     {
  
       href: "/helpAndFeedback",
+    },
+    {
+ 
+      href: "/internalFaculty",
     },
   ],
 

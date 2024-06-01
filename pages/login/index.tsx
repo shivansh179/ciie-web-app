@@ -5,25 +5,43 @@ import { toast, Slide, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { auth } from '@/firebaseconfig';
 import { Checkbox } from '@nextui-org/react';
+import { UsersData, AdminData } from '@/interfaces'; // Import interfaces
+
+// Load JSON data
+import usersData from '@/components/users.json';
+import adminData from '@/components/admins.json';
+
+const users: UsersData = usersData;
+const admin: AdminData = adminData;
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleFirebaseLogin = (email, password) => {
+  const handleFirebaseLogin = (email: string, password: string) => {
     try {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
           // Check if the email is admin 
-          if(email === "prasantshukla89@gmail.com"){
-            window.location.replace("/admin");
-  
-          }else{
-            // Normal user
+          if (admin.admins.includes(email)) {
+            window.location.replace("./");
+          } else if (users.users.includes(email)) {
             toast.success("Logged in successfully!");
             window.location.replace("./");
+          } else {
+            toast.error('Either Your credentials are invalid or You are not a member of Ciie  ', {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Slide,
+            });
           }
         })
         .catch((error) => {

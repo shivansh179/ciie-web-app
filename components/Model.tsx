@@ -1,9 +1,13 @@
-// components/Modal.js
 import { useEffect } from 'react';
 
-const Modal = ({ children, onClose }) => {
+interface ModalProps {
+  children: React.ReactNode;
+  onClose: () => void;
+}
+
+const Modal = ({ children, onClose }: ModalProps) => {
   useEffect(() => {
-    const handleEsc = (event) => {
+    const handleEsc = (event: { keyCode: number }) => {
       if (event.keyCode === 27) {
         onClose();
       }
