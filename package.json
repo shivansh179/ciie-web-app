@@ -10,8 +10,10 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@firebase/app": "^0.10.5",
 		"@firebase/auth": "^1.7.4",
 		"@firebase/firestore": "^4.6.3",
+		"@firebase/storage": "^0.12.5",
 		"@headlessui/react": "^2.0.4",
 		"@nextui-org/react": "^2.3.6",
 		"@types/firebase": "^3.2.1",

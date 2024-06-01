@@ -1,6 +1,8 @@
 // lib/firebaseConfig.js
+// import { initializeApp, getApps, getApp } from 'firebase/app';
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth } from '@firebase/auth';
+// import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
