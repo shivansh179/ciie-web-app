@@ -1,7 +1,7 @@
 // components/withAdminAuth.js
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth } from '@/firebaseconfig';
+import { auth } from './firebaseConfig';
 
 const withAdminAuth = (WrappedComponent) => {
   const WithAdminAuth = (props) => {
