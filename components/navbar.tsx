@@ -23,7 +23,7 @@ import { SearchIcon } from "@/components/icons";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
-import { auth } from "../firebaseconfig"; // Ensure this import is correct
+import { auth } from "./firebaseConfig"; 
 import { Menu } from "@headlessui/react";
 import adminData from './admins.json'
  

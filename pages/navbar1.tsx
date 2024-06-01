@@ -13,7 +13,7 @@ import {
 } from "@nextui-org/react";
 import Image from "next/image";
 import { onAuthStateChanged, signOut } from "@firebase/auth";
-import { auth } from "@/firebaseconfig";
+import { auth } from "@/components/firebaseConfig";
 
 export default function App() {
   const [username, setUsername] = useState('');

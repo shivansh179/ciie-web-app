@@ -14,7 +14,7 @@ import {
 import { useRouter } from "next/router";
 import DefaultLayout from "@/layouts/default";
 import BackdropAnimation from "@/components/utils/backdrop_animation";
-import { auth, db, storage } from "@/firebaseconfig";
+import { auth, db, storage } from "@/components/firebaseConfig";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Toaster, toast } from 'react-hot-toast';

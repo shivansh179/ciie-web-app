@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { toast, Slide, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { auth } from '@/firebaseconfig';
+import { auth } from '@/components/firebaseConfig';
 import { Checkbox } from '@nextui-org/react';
 import { UsersData, AdminData } from '@/interfaces'; // Import interfaces
 
