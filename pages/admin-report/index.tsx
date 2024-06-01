@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { db } from '@/firebaseconfig';
+import { db } from '../../components/firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 import withAdminAuth from '@/components/withAdminAuth';
 import Modal from '@/components/Model';
