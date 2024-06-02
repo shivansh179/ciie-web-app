@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { db } from '../../components/firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 import toast, { Toaster } from 'react-hot-toast';
+import Link from 'next/link';
+import { Button } from '@nextui-org/react';
+import { IoMdExit } from 'react-icons/io';
+import BackdropAnimation from '@/components/utils/backdrop_animation';
+import DefaultLayout from '@/layouts/default';
+
 
 const ConnectPage = () => {
   const [formData, setFormData] = useState({
@@ -43,8 +49,20 @@ const ConnectPage = () => {
   };
 
   return (
+    <DefaultLayout>
     <div className="container mx-auto px-4">
+      <BackdropAnimation/>
+      <div className='flex felx-row justify-between'>
+       
       <h2 className="text-3xl font-bold mb-6">Connect with CIIE</h2>
+
+      <Link href="/">
+        <Button color="danger" variant="bordered" startContent={<IoMdExit className="transform rotate-180 size-7" />} className=' ml-10'>
+        Home Page
+        </Button>
+      </Link>
+
+      </div>
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
         {/* Name Field */}
         <div className="mb-4">
@@ -81,6 +99,8 @@ const ConnectPage = () => {
       </form>
       <Toaster position='bottom-center'/>
     </div>
+   </DefaultLayout>
+
   );
 };
 

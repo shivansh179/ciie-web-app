@@ -54,6 +54,7 @@ const SuccessPage = () => {
   
     const handleReject = async (id: string) => {
       try {
+        toast.success("Data deleted");
         await deleteDoc(doc(db, 'requests', id));
         setRequests((prevRequests) => prevRequests.filter((request) => request.id !== id));
       } catch (error) {
