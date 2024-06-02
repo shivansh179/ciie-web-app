@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../../components/firebaseConfig';
+import { useRouter } from 'next/router';
+import { db, auth } from '../../components/firebaseConfig'; // Assuming auth is exported from your Firebase config
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import DefaultLayout from '@/layouts/default';
 import Modal from '../../components/Model'; // Ensure the path is correct
@@ -9,118 +10,105 @@ import { IoMdExit } from 'react-icons/io';
 import emailjs from 'emailjs-com';
 import toast, { Toaster } from 'react-hot-toast';
 import BackdropAnimation from '@/components/utils/backdrop_animation';
-import { Toast } from 'react-toastify/dist/components';
- 
 
 const SuccessPage = () => {
+    const router = useRouter();
+    const [user, setUser] = useState(null); // State to hold user data if needed
     const [requests, setRequests] = useState([]);
     const [selectedReason, setSelectedReason] = useState(null);
-    const [email, setEmail] = useState("");
-    const [subject, setSubject] = useState("Request Accepted");
-    const [message, setMessage] = useState("Your application for joining CIIE has been accepted");
-    const [verify, setVerify] = useState("");
+
     useEffect(() => {
-      fetchData();
-    }, []);
-  
-    const baseUrl = "https://ciie-request-backend.onrender.com";
-  
-    const fetchData = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'requests'));
-        const fetchedRequests: ((prevState: never[]) => never[]) | { id: string; }[] = [];
-        querySnapshot.forEach((doc) => {
-          fetchedRequests.push({ id: doc.id, ...doc.data() });
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (!user) {
+                router.push('/login'); // Redirect to login page if not logged in
+            } else {
+                setUser(user);
+                fetchData(); // Fetch data if logged in
+            }
         });
-        setRequests(fetchedRequests);
-      } catch (error) {
-        console.error('Error fetching data from Firebase: ', error);
-      }
+
+        return () => unsubscribe();
+    }, []);
+
+    const baseUrl = "https://ciie-request-backend.onrender.com";
+
+    const fetchData = async () => {
+        try {
+            const querySnapshot = await getDocs(collection(db, 'requests'));
+            const fetchedRequests = [];
+            querySnapshot.forEach((doc) => {
+                fetchedRequests.push({ id: doc.id, ...doc.data() });
+            });
+            setRequests(fetchedRequests);
+        } catch (error) {
+            console.error('Error fetching data from Firebase: ', error);
+        }
     };
-  
-    const formatDate = (timestamp: { toDate: () => any; }) => {
-      if (!timestamp) return '';
-      const date = timestamp.toDate();
-      return date.toLocaleString();
+
+    const formatDate = (timestamp) => {
+        if (!timestamp) return '';
+        const date = timestamp.toDate();
+        return date.toLocaleString();
     };
-  
-    const handleReasonClick = (reason: React.SetStateAction<null>) => {
-      setSelectedReason(reason);
+
+    const handleReasonClick = (reason) => {
+        setSelectedReason(reason);
     };
-  
+
     const closeModal = () => {
-      setSelectedReason(null);
+        setSelectedReason(null);
     };
-  
-    const handleReject = async (id: string) => {
-      try {
-        toast.success("Data deleted");
-        await deleteDoc(doc(db, 'requests', id));
-        setRequests((prevRequests) => prevRequests.filter((request) => request.id !== id));
-      } catch (error) {
-        console.error('Error deleting document: ', error);
-      }
+
+    const handleReject = async (id) => {
+        try {
+            toast.success("Data deleted");
+            await deleteDoc(doc(db, 'requests', id));
+            setRequests((prevRequests) => prevRequests.filter((request) => request.id !== id));
+        } catch (error) {
+            console.error('Error deleting document: ', error);
+        }
     };
-   
-    
-     
-    const sendEmail = async (request: never) => {
-      setEmail(request.email);
-      setSubject("Request Accepted");
-      setMessage("Your application for joining CIIE has been accepted");
-  
-      let dataSend = {
-        email: request.email,
-        subject: "Request Accepted",
-        message: "Your application for joining CIIE has been accepted",
-      };
-  
-      console.log(dataSend); // Log the data before sending the email
 
-      try {
-        await deleteDoc(doc(db, 'requests', request.id));
-        setRequests((prevRequests) => prevRequests.filter((request) => request.id !== request.id));
-      } catch (error) {
-        console.error('Error accepting document: ', error);
-      }
-      
-      toast.success("Mail sent, wait fetching current data");
+    const sendEmail = async (request) => {
+        try {
+            // Example of sending email
+            const dataSend = {
+                email: request.email,
+                subject: "Request Accepted",
+                message: "Your application for joining CIIE has been accepted",
+            };
 
-      setTimeout(() => {
-       
-        window.location.reload();
-        
-      }, 5000);
+            await deleteDoc(doc(db, 'requests', request.id));
+            setRequests((prevRequests) => prevRequests.filter((req) => req.id !== request.id));
 
+            toast.success("Mail sent, wait fetching current data");
 
-      console.log("jai shri ram");
-      
-      
-      const res = await fetch(`${baseUrl}/email/sendEmail`, {
-        method: "POST",
-        body: JSON.stringify(dataSend),
-        headers: {
-          
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        
-        
-      })
-        
-      
-      if (res.ok) {
-        toast.success("Message sent successfully!");
-        console.log("jai shree ram");
-      
-      } else {
-        toast.error("Failed to send message");
-      }
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+
+            const res = await fetch(`${baseUrl}/email/sendEmail`, {
+                method: "POST",
+                body: JSON.stringify(dataSend),
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (res.ok) {
+                toast.success("Message sent successfully!");
+            } else {
+                toast.error("Failed to send message");
+            }
+        } catch (error) {
+            console.error('Error accepting document: ', error);
+        }
     };
 
     return (
         <DefaultLayout>
-          <BackdropAnimation/>
+            <BackdropAnimation />
             <div className="container mx-auto">
                 <div className="flex flex-row justify-between">
                     <h1 className="text-3xl font-bold mb-6">Requests</h1>
