@@ -8,6 +8,9 @@ import { Button } from '@nextui-org/react';
 import { IoMdExit } from 'react-icons/io';
 import emailjs from 'emailjs-com';
 import toast, { Toaster } from 'react-hot-toast';
+import BackdropAnimation from '@/components/utils/backdrop_animation';
+import { Toast } from 'react-toastify/dist/components';
+ 
 
 const SuccessPage = () => {
     const [requests, setRequests] = useState([]);
@@ -58,7 +61,8 @@ const SuccessPage = () => {
       }
     };
    
-  
+    
+     
     const sendEmail = async (request: never) => {
       setEmail(request.email);
       setSubject("Request Accepted");
@@ -71,7 +75,26 @@ const SuccessPage = () => {
       };
   
       console.log(dataSend); // Log the data before sending the email
-  
+
+      try {
+        await deleteDoc(doc(db, 'requests', request.id));
+        setRequests((prevRequests) => prevRequests.filter((request) => request.id !== request.id));
+      } catch (error) {
+        console.error('Error accepting document: ', error);
+      }
+      
+      toast.success("Mail sent, wait fetching current data");
+
+      setTimeout(() => {
+       
+        window.location.reload();
+        
+      }, 5000);
+
+
+      console.log("jai shri ram");
+      
+      
       const res = await fetch(`${baseUrl}/email/sendEmail`, {
         method: "POST",
         body: JSON.stringify(dataSend),
@@ -80,23 +103,15 @@ const SuccessPage = () => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-         
-      });
-
-      
         
-
-      
+        
+      })
+        
       
       if (res.ok) {
         toast.success("Message sent successfully!");
         console.log("jai shree ram");
-         try {
-        await deleteDoc(doc(db, 'requests', request.id));
-        setRequests((prevRequests) => prevRequests.filter((request) => request.id !== request.id));
-      } catch (error) {
-        console.error('Error accepting document: ', error);
-      }
+      
       } else {
         toast.error("Failed to send message");
       }
@@ -104,6 +119,7 @@ const SuccessPage = () => {
 
     return (
         <DefaultLayout>
+          <BackdropAnimation/>
             <div className="container mx-auto">
                 <div className="flex flex-row justify-between">
                     <h1 className="text-3xl font-bold mb-6">Requests</h1>
