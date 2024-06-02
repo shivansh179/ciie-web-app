@@ -42,6 +42,34 @@ export const siteConfig = {
  
       href: "/internalFaculty",
     },
+    {
+ 
+      href: "/mission",
+    },
+    {
+ 
+      href: "/vision",
+    },
+    {
+ 
+      href: "/core_student_members",
+    },
+    {
+ 
+      href: "/allumni",
+    },
+    {
+ 
+      href: "/mentors",
+    },
+    {
+ 
+      href: "/connect",
+    },
+    {
+ 
+      href: "/requests",
+    },
   ],
 
   navMenuItems: [

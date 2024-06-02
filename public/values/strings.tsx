@@ -114,6 +114,46 @@ const Strings = {
       linkedin: "https://www.linkedin.com/in/hayagriva-k-907037243/",
       github: "https://github.com/Hayagriva-K",
     },
+    2: {
+      name: "T.S. Hayagriva Kishan",
+      domain: "Web Dev",
+      image: "",
+      description:
+        "I am a Web Developer with experience in building web applications using various technologies such as ReactJS, NextJS, and NodeJS. I am also proficient in using design tools such as Figma and Adobe XD.",
+      gender: "male",
+      linkedin: "https://www.linkedin.com/in/hayagriva-k-907037243/",
+      github: "https://github.com/Hayagriva-K",
+    },
+    3: {
+      name: "T.S. Hayagriva Kishan",
+      domain: "Web Dev",
+      image: "",
+      description:
+        "I am a Web Developer with experience in building web applications using various technologies such as ReactJS, NextJS, and NodeJS. I am also proficient in using design tools such as Figma and Adobe XD.",
+      gender: "male",
+      linkedin: "https://www.linkedin.com/in/hayagriva-k-907037243/",
+      github: "https://github.com/Hayagriva-K",
+    },
+    4: {
+      name: "T.S. Hayagriva Kishan",
+      domain: "Web Dev",
+      image: "",
+      description:
+        "I am a Web Developer with experience in building web applications using various technologies such as ReactJS, NextJS, and NodeJS. I am also proficient in using design tools such as Figma and Adobe XD.",
+      gender: "male",
+      linkedin: "https://www.linkedin.com/in/hayagriva-k-907037243/",
+      github: "https://github.com/Hayagriva-K",
+    },
+    5: {
+      name: "T.S. Hayagriva Kishan",
+      domain: "Web Dev",
+      image: "",
+      description:
+        "I am a Web Developer with experience in building web applications using various technologies such as ReactJS, NextJS, and NodeJS. I am also proficient in using design tools such as Figma and Adobe XD.",
+      gender: "male",
+      linkedin: "https://www.linkedin.com/in/hayagriva-k-907037243/",
+      github: "https://github.com/Hayagriva-K",
+    },
 
   },
   verge: {

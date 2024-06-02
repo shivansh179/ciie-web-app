@@ -14,7 +14,7 @@ import {
 import Image from "next/image";
 import { onAuthStateChanged, signOut } from "@firebase/auth";
 import { auth } from "../components/firebaseConfig";
-
+ 
 export default function App() {
   const [username, setUsername] = useState('');
 
@@ -75,8 +75,8 @@ export default function App() {
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link color="foreground" href="#">
-              About us
+            <Link color="foreground" href="/requests">
+             Request
             </Link>
           </NavbarItem>
         </NavbarContent>
@@ -103,7 +103,9 @@ export default function App() {
             <DropdownItem key="team_settings">Team Settings</DropdownItem>
             <DropdownItem key="analytics">Analytics</DropdownItem>
             <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
+       
+            <DropdownItem key="configurations" href="/">Ciie Page</DropdownItem>
+      
             <DropdownItem key="help_and_feedback">
               <Link color="foreground" href="/helpAndFeedback">
                 Help & Feedback

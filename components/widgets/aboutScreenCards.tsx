@@ -45,7 +45,7 @@ function SpeechCard(props: professorProp) {
           {props.name}
         </h1>
 
-        <h1 className=" text-[#8800ff] font-bold text-right mr-1">
+        <h1 className=" text-[#5cc3ff] font-bold text-right mr-1">
           {props.designation}
         </h1>
       </div>
