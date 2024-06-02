@@ -15,12 +15,12 @@ const SuccessPage = () => {
     const [email, setEmail] = useState("");
     const [subject, setSubject] = useState("Request Accepted");
     const [message, setMessage] = useState("Your application for joining CIIE has been accepted");
-  
+    const [verify, setVerify] = useState("");
     useEffect(() => {
       fetchData();
     }, []);
   
-    const baseUrl = "http://localhost:8000";
+    const baseUrl = "https://ciie-request-backend.onrender.com";
   
     const fetchData = async () => {
       try {
@@ -57,15 +57,7 @@ const SuccessPage = () => {
         console.error('Error deleting document: ', error);
       }
     };
-    
-    const handleAccept = async (request: never) => {
-      try {
-        await deleteDoc(doc(db, 'requests', request.id));
-        setRequests((prevRequests) => prevRequests.filter((request) => request.id !== request.id));
-      } catch (error) {
-        console.error('Error accepting document: ', error);
-      }
-    };
+   
   
     const sendEmail = async (request: never) => {
       setEmail(request.email);
@@ -84,14 +76,27 @@ const SuccessPage = () => {
         method: "POST",
         body: JSON.stringify(dataSend),
         headers: {
+          
           Accept: "application/json",
           "Content-Type": "application/json",
         },
+         
       });
-  
+
+      
+        
+
+      
+      
       if (res.ok) {
         toast.success("Message sent successfully!");
-        handleAccept(request);
+        console.log("jai shree ram");
+         try {
+        await deleteDoc(doc(db, 'requests', request.id));
+        setRequests((prevRequests) => prevRequests.filter((request) => request.id !== request.id));
+      } catch (error) {
+        console.error('Error accepting document: ', error);
+      }
       } else {
         toast.error("Failed to send message");
       }
