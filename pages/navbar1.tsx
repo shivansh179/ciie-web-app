@@ -71,7 +71,7 @@ export default function App() {
           </NavbarItem>
           <NavbarItem>
             <Link color="foreground" href="#">
-              Trainings
+              Manage
             </Link>
           </NavbarItem>
           <NavbarItem>

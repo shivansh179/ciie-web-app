@@ -5,11 +5,12 @@ import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import DefaultLayout from '@/layouts/default';
 import Modal from '../../components/Model'; // Ensure the path is correct
 import Link from 'next/link';
-import { Button } from '@nextui-org/react';
+import { Button, Navbar } from '@nextui-org/react';
 import { IoMdExit } from 'react-icons/io';
 import emailjs from 'emailjs-com';
 import toast, { Toaster } from 'react-hot-toast';
 import BackdropAnimation from '@/components/utils/backdrop_animation';
+import App  from '../../pages/navbar1';
 
 const SuccessPage = () => {
     const router = useRouter();
@@ -107,17 +108,18 @@ const SuccessPage = () => {
     };
 
     return (
-        <DefaultLayout>
+       <>
+       <App/>
             <BackdropAnimation />
             <div className="container mx-auto">
                 <div className="flex flex-row justify-between">
-                    <h1 className="text-3xl font-bold mb-6">Requests</h1>
+                    <h1 className="text-3xl font-bold mt-6">Requests</h1>
                     <Link href="/admin">
                         <Button
                             color="danger"
                             variant="bordered"
-                            startContent={<IoMdExit className="transform rotate-180 size-7" />}
-                            className="mb-10"
+                            startContent={<IoMdExit className="transform rotate-180 size-5" />}
+                            className="mb-5 mt-5"
                         >
                             Admin Page
                         </Button>
@@ -181,7 +183,7 @@ const SuccessPage = () => {
                 )}
                 <Toaster position='bottom-center'/>
             </div>
-        </DefaultLayout>
+            </>
     );
 };
 

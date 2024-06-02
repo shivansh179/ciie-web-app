@@ -6,6 +6,8 @@ import Modal from '@/components/Model';
 import { Button } from '@nextui-org/react';
 import { IoMdExit } from "react-icons/io";
 import Link from 'next/link';
+import App from '../../pages/navbar1';
+import BackdropAnimation from '@/components/utils/backdrop_animation';
 
 interface Submission {
   email: string;
@@ -48,12 +50,16 @@ const AdminPage = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <Link href="/admin">
-        <Button color="danger" variant="bordered" startContent={<IoMdExit className="transform rotate-180 size-7" />} className='mb-8'>
-          Admin Page
-        </Button>
-      </Link>
-      <h1 className="text-2xl font-bold mb-4">Data Table</h1>
+      <BackdropAnimation/>
+      <App/>
+      <div className='flex flex-row justify-between'>
+        <h1 className="text-2xl font-bold mt-10">Data Table</h1>
+          <Link href="/admin">
+            <Button color="danger" variant="bordered" startContent={<IoMdExit className="transform rotate-180 size-7" />} className='mt-10 mb-5'>
+              Admin Page
+            </Button>
+          </Link>
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-black border border-gray-300">
           <thead>

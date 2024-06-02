@@ -15,6 +15,9 @@ import Link from "next/link";
 import { Button } from "@nextui-org/react";
 import { IoMdExit } from "react-icons/io";
 import Image from "next/image";
+import App from '../../pages/navbar1';
+
+
 export default function DocsPage() {
   
 
@@ -23,12 +26,14 @@ export default function DocsPage() {
 
      
       <section className="flex flex-col items-center justify-center gap-4">
-        <div className="pb-10 max-w-7xl text-center items-center justify-center place-content-center">
+        <App/>
+        <BackdropAnimation/>
         <Link href="/admin">
-       <Button color="danger" variant="bordered" startContent={<IoMdExit className="transform rotate-180 size-7"/>} className='mt-8 mr-184'  href='/admin' >
+       <Button color="danger" variant="bordered" startContent={<IoMdExit className="transform rotate-180 size-7"/>} className='mt-8 mr-192'  href='/admin' >
         Admin Page
         </Button>
       </Link>
+        <div className="pb-10 max-w-7xl text-center items-center justify-center place-content-center">
           <BackdropAnimation />
     
           <Image
@@ -69,51 +74,8 @@ export default function DocsPage() {
  
           
  
-
-          <div className="text-2xl md:text-3xl font-bold mt-20 mb-10">
-            <h1 className="text-start" id="team-section">Team</h1>
-          </div>
-          <div className="grid gap-y-10 max-w-4xl mx-auto sm:gap-y-4 sm:gap-x-5 sm:grid-cols-2 md:grid-cols-3 transition-all duration-300">
-            {Object.values(Strings1.team_members).map((member) => (
-              <TeamMemberCard
-                key={member.name}
-                image={
-                  member.image == ""
-                    ? member.gender == "male"
-                      ? "/anonymous_male.svg"
-                      : "/anonymous_female.svg"
-                    : member.image
-                }
-                description={member.description}
-                name={member.name}
-                domain={member.domain}
-                linkedin={member.linkedin}
-                github={member.github}
-              />
-            ))}
-          </div>
-          <div className="text-2xl md:text-3xl font-bold mt-20 mb-10">
-            <h1 className="text-start">Alumni</h1>
-          </div>
-          <div className="grid gap-y-10 max-w-4xl mx-auto sm:gap-y-4 sm:gap-x-5 sm:grid-cols-2 md:grid-cols-3 transition-all duration-300">
-            {Object.values(Strings1.alumni).map((member) => (
-              <TeamMemberCard
-                key={member.name}
-                image={
-                  member.image == ""
-                    ? member.gender == "male"
-                      ? "/anonymous_male.svg"
-                      : "/anonymous_female.svg"
-                    : member.image
-                }
-                description={member.description}
-                name={member.name}
-                domain={member.domain}
-                linkedin={member.linkedin}
-                github={member.github}
-              />
-            ))}
-          </div>
+ 
+          
         </div>
       </section>
     
